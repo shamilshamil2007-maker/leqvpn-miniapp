@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101014">
+  <title>LeqVPN</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px 18px;
+      background: #101014;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    .brand { display:flex; align-items:center; gap:14px; }
+    .logo {
+      width:58px; height:58px; border-radius:17px;
+      background:#d51f35; display:grid; place-items:center;
+      font-size:29px; font-weight:bold;
+    }
+    h1 { margin:0; font-size:27px; }
+    .sub { color:#a4a4af; font-size:12px; margin-top:5px; }
+    .panel {
+      margin-top:28px; padding:20px; border-radius:18px;
+      background:#1b1b23; border:1px solid #30303a;
+    }
+    .muted { color:#aaaab7; font-size:13px; }
+    .status { margin-top:12px; font-size:20px; font-weight:bold; }
+    h2 { font-size:17px; margin:28px 0 14px; }
+    .client {
+      width:100%; padding:17px; margin-bottom:11px;
+      border:1px solid #383842; border-radius:14px;
+      background:#1b1b23; color:#fff; text-align:left;
+      font-size:16px; cursor:pointer;
+    }
+    .client small { display:block; color:#aaaab7; margin-top:6px; }
+    .client.selected { border:1px solid #ed3048; background:#2b1920; }
+    .main {
+      width:100%; padding:17px; margin-top:12px;
+      border:0; border-radius:14px; background:#d51f35;
+      color:white; font-size:16px; font-weight:bold;
+      cursor:pointer;
+    }
+    .note { margin-top:18px; color:#9696a3; font-size:12px; line-height:1.5; }
+    .footer { display:flex; justify-content:space-around; margin-top:30px; color:#aaaab7; font-size:13px; }
+  </style>
+</head>
+<body>
+  <header class="brand">
+    <div class="logo">L</div>
+    <div>
+      <h1>LeqVPN</h1>
+      <div class="sub">СВОБОДНЫЙ ИНТЕРНЕТ</div>
+    </div>
+  </header>
+
+  <section class="panel">
+    <div class="muted">СТАТУС VPN</div>
+    <div class="status">● Не подключён</div>
+    <p class="muted">Выбери приложение для импорта профиля.</p>
+  </section>
+
+  <h2>Выбери приложение</h2>
+
+  <button class="client selected" data-client="Happ" onclick="choose(this)">
+    🟠 Happ
+    <small>Импорт VPN-профиля</small>
+  </button>
+
+  <button class="client" data-client="INCY" onclick="choose(this)">
+    ⚡ INCY
+    <small>Импорт VPN-профиля</small>
+  </button>
+
+  <button class="main" onclick="connect()">Продолжить →</button>
+
+  <p class="note" id="message">
+    Выбери клиент и нажми «Продолжить». Для подключения нужен действующий VPN-профиль.
+  </p>
+
+  <div class="footer">
+    <span>Подключение</span>
+    <span>Тарифы</span>
+    <span>Профиль</span>
+  </div>
+
+  <script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+
+    let selectedClient = "Happ";
+
+    function choose(button) {
+      document.querySelectorAll(".client").forEach(
+        item => item.classList.remove("selected")
+      );
+      button.classList.add("selected");
+      selectedClient = button.dataset.client;
+      document.getElementById("message").textContent =
+        "Выбран " + selectedClient + ". Нажми «Продолжить».";
+    }
+
+    function connect() {
+      document.getElementById("message").textContent =
+        "Выбран " + selectedClient +
+        ". Следующий этап — подключить выдачу профиля LeqVPN.";
+      if (tg) {
+        tg.showPopup({
+          title: "LeqVPN",
+          message: "Выбран клиент " + selectedClient +
+            ". Выдачу профиля подключим следующим этапом.",
+          buttons: [{type: "ok", text: "Понятно"}]
+        });
+      }
+    }
+  </script>
+</body>
+</html>
