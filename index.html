@@ -108,16 +108,13 @@
     }
 
     function connect() {
-      document.getElementById("message").textContent =
-        "Выбран " + selectedClient +
-        ". Следующий этап — подключить выдачу профиля LeqVPN.";
-      if (tg) {
-        tg.showPopup({
-          title: "LeqVPN",
-          message: "Выбран клиент " + selectedClient +
-            ". Выдачу профиля подключим следующим этапом.",
-          buttons: [{type: "ok", text: "Понятно"}]
-        });
+      if (tg && typeof tg.sendData === "function") {
+        tg.sendData(JSON.stringify({client: selectedClient}));
+        document.getElementById("message").textContent =
+          "Отправляем запрос боту LeqVPN...";
+      } else {
+        document.getElementById("message").textContent =
+          "Открой Mini App через кнопку внутри Telegram.";
       }
     }
   </script>
