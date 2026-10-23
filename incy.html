@@ -18,7 +18,7 @@
         document.getElementById("status").textContent = "Ссылка подписки отсутствует или некорректна.";
         return;
       }
-      location.href = "incy://import/" + subscription;
+      location.href = "incy://add/" + encodeURIComponent(subscription);
     };
   </script>
 </body>
