@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LeqVPN - INCY</title>
+</head>
+<body>
+  <h2>LeqVPN</h2>
+  <p>Нажми кнопку, чтобы импортировать подписку в INCY.</p>
+  <button id="open">Открыть в INCY</button>
+  <p id="status"></p>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const subscription = params.get("url");
+    document.getElementById("open").onclick = () => {
+      if (!subscription || !subscription.startsWith("https://")) {
+        document.getElementById("status").textContent = "Ссылка подписки отсутствует или некорректна.";
+        return;
+      }
+      location.href = "incy://add?url=" + encodeURIComponent(subscription);
+    };
+  </script>
+</body>
+</html>
