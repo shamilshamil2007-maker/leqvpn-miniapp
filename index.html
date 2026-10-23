@@ -3,118 +3,311 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101014">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#081426">
   <title>LeqVPN</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     * { box-sizing: border-box; }
+
+    :root {
+      color-scheme: dark;
+      --blue: #1687ff;
+      --cyan: #60c8ff;
+      --bg: #081426;
+      --panel: #101f35;
+      --border: #203957;
+      --muted: #91a7c3;
+    }
+
     body {
       margin: 0;
-      padding: 24px 18px;
-      background: #101014;
-      color: #fff;
-      font-family: Arial, sans-serif;
+      padding: 26px 18px calc(30px + env(safe-area-inset-bottom));
+      background:
+        radial-gradient(ellipse at 85% 0%, #123c6c 0%, transparent 42%),
+        var(--bg);
+      color: #f4f8ff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      min-height: 100vh;
     }
-    .brand { display:flex; align-items:center; gap:14px; }
+
+    .app { max-width: 480px; margin: 0 auto; }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
     .logo {
-      width:58px; height:58px; border-radius:17px;
-      background:#d51f35; display:grid; place-items:center;
-      font-size:29px; font-weight:bold;
+      width: 58px;
+      height: 58px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 19px;
+      color: white;
+      font-size: 30px;
+      font-weight: 800;
+      background: linear-gradient(145deg, #39b7ff, #0862e8);
+      box-shadow: 0 8px 28px #087cff35;
     }
-    h1 { margin:0; font-size:27px; }
-    .sub { color:#a4a4af; font-size:12px; margin-top:5px; }
-    .panel {
-      margin-top:28px; padding:20px; border-radius:18px;
-      background:#1b1b23; border:1px solid #30303a;
+
+    h1 { margin: 0; font-size: 28px; letter-spacing: -.7px; }
+    .sub { margin-top: 5px; color: #9eb7d8; font-size: 13px; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      margin-top: 28px;
+      padding: 23px;
+      border-radius: 24px;
+      border: 1px solid #24466b;
+      background: linear-gradient(145deg, #142f50, #0d1b30 75%);
     }
-    .muted { color:#aaaab7; font-size:13px; }
-    .status { margin-top:12px; font-size:20px; font-weight:bold; }
-    h2 { font-size:17px; margin:28px 0 14px; }
+
+    .hero:after {
+      content: "";
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      right: -55px;
+      top: -55px;
+      border-radius: 50%;
+      background: #1687ff20;
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      color: #a9c8ed;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 17px;
+      font-size: 23px;
+      font-weight: 750;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #8fa3bb;
+      box-shadow: 0 0 12px #8fa3bb55;
+    }
+
+    .description {
+      margin: 12px 0 0;
+      color: #b1c4dd;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .section-title {
+      margin: 29px 0 13px;
+      font-size: 18px;
+      font-weight: 750;
+    }
+
     .client {
-      width:100%; padding:17px; margin-bottom:11px;
-      border:1px solid #383842; border-radius:14px;
-      background:#1b1b23; color:#fff; text-align:left;
-      font-size:16px; cursor:pointer;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+      padding: 16px;
+      text-align: left;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #0e1d32;
+      color: #f4f8ff;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
     }
-    .client small { display:block; color:#aaaab7; margin-top:6px; }
-    .client.selected { border:1px solid #ed3048; background:#2b1920; }
+
+    .client.selected {
+      border-color: var(--blue);
+      background: linear-gradient(110deg, #123866, #10233c);
+      box-shadow: inset 0 0 0 1px #1687ff30;
+    }
+
+    .client-icon {
+      width: 47px;
+      height: 47px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      border-radius: 14px;
+      background: #17375a;
+      color: var(--cyan);
+      font-size: 23px;
+      font-weight: 800;
+    }
+
+    .client-info { flex: 1; min-width: 0; }
+    .client-name { font-size: 16px; font-weight: 750; }
+    .client small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .check {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      border: 1px solid #526b88;
+      border-radius: 50%;
+      color: transparent;
+      font-size: 13px;
+    }
+
+    .selected .check {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: white;
+    }
+
     .main {
-      width:100%; padding:17px; margin-top:12px;
-      border:0; border-radius:14px; background:#d51f35;
-      color:white; font-size:16px; font-weight:bold;
-      cursor:pointer;
+      width: 100%;
+      min-height: 55px;
+      margin-top: 9px;
+      padding: 16px;
+      border: 0;
+      border-radius: 16px;
+      background: linear-gradient(100deg, #087cff, #299eff);
+      color: white;
+      font-size: 16px;
+      font-weight: 750;
+      cursor: pointer;
+      box-shadow: 0 8px 24px #087cff30;
     }
-    .note { margin-top:18px; color:#9696a3; font-size:12px; line-height:1.5; }
-    .footer { display:flex; justify-content:space-around; margin-top:30px; color:#aaaab7; font-size:13px; }
+
+    .main:active { transform: scale(.99); }
+    button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+    .note {
+      margin: 17px 4px 0;
+      color: #91a7c3;
+      font-size: 12px;
+      line-height: 1.65;
+      text-align: center;
+    }
+
+    .footer {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid #1d314b;
+      color: #7790ae;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    #message { overflow-wrap: anywhere; }
   </style>
 </head>
 <body>
-  <header class="brand">
-    <div class="logo">L</div>
-    <div>
-      <h1>LeqVPN</h1>
-      <div class="sub">СВОБОДНЫЙ ИНТЕРНЕТ</div>
-    </div>
-  </header>
+  <main class="app">
+    <header class="brand">
+      <div class="logo">L</div>
+      <div>
+        <h1>LeqVPN</h1>
+        <div class="sub">Твой VPN · Простое подключение</div>
+      </div>
+    </header>
 
-  <section class="panel">
-    <div class="muted">СТАТУС VPN</div>
-    <div class="status">● Не подключён</div>
-    <p class="muted">Выбери приложение для импорта профиля.</p>
-  </section>
+    <section class="hero">
+      <div class="eyebrow">ТВОЙ VPN</div>
+      <div class="status">
+        <span class="dot"></span>
+        <span>Готов к настройке</span>
+      </div>
+      <p class="description">
+        Выбери приложение для импорта VPN-подписки.
+        Всё необходимое будет отправлено через бота.
+      </p>
+    </section>
 
-  <h2>Выбери приложение</h2>
+    <h2 class="section-title">Выбери приложение</h2>
 
-  <button class="client selected" data-client="Happ" onclick="choose(this)">
-    🟠 Happ
-    <small>Импорт VPN-профиля</small>
-  </button>
+    <button class="client selected" data-client="Happ"
+      aria-pressed="true" onclick="choose(this)">
+      <span class="client-icon">H</span>
+      <span class="client-info">
+        <span class="client-name">Happ</span>
+        <small>Рекомендуемый клиент · iPhone</small>
+      </span>
+      <span class="check">✓</span>
+    </button>
 
-  <button class="client" data-client="INCY" onclick="choose(this)">
-    ⚡ INCY
-    <small>Импорт VPN-профиля</small>
-  </button>
+    <button class="client" data-client="INCY"
+      aria-pressed="false" onclick="choose(this)">
+      <span class="client-icon">I</span>
+      <span class="client-info">
+        <span class="client-name">INCY</span>
+        <small>Импорт VPN-подписки</small>
+      </span>
+      <span class="check">✓</span>
+    </button>
 
-  <button class="main" onclick="connect()">Продолжить →</button>
+    <button class="main" onclick="connect()">
+      Продолжить <span aria-hidden="true">→</span>
+    </button>
 
-  <p class="note" id="message">
-    Выбери клиент и нажми «Продолжить». Для подключения нужен действующий VPN-профиль.
-  </p>
+    <p class="note" id="message" role="status" aria-live="polite">
+      Выбери приложение и нажми «Продолжить».
+    </p>
 
-  <div class="footer">
-    <span>Подключение</span>
-    <span>Тарифы</span>
-    <span>Профиль</span>
-  </div>
+    <footer class="footer">
+      LeqVPN · Управление VPN-подпиской
+    </footer>
+  </main>
 
   <script>
     const tg = window.Telegram?.WebApp;
+
     if (tg) {
       tg.ready();
       tg.expand();
+      tg.setHeaderColor("#081426");
+      tg.setBackgroundColor("#081426");
     }
 
     let selectedClient = "Happ";
 
     function choose(button) {
-      document.querySelectorAll(".client").forEach(
-        item => item.classList.remove("selected")
-      );
+      document.querySelectorAll(".client").forEach(item => {
+        item.classList.remove("selected");
+        item.setAttribute("aria-pressed", "false");
+      });
+
       button.classList.add("selected");
+      button.setAttribute("aria-pressed", "true");
       selectedClient = button.dataset.client;
+
       document.getElementById("message").textContent =
-        "Выбран " + selectedClient + ". Нажми «Продолжить».";
+        "Выбрано приложение: " + selectedClient + ". Нажми «Продолжить».";
     }
 
     function connect() {
+      const message = document.getElementById("message");
+
       if (tg && typeof tg.sendData === "function") {
-        tg.sendData(JSON.stringify({client: selectedClient}));
-        document.getElementById("message").textContent =
-          "Отправляем запрос боту LeqVPN...";
+        message.textContent = "Отправляем запрос боту LeqVPN…";
+        tg.sendData(JSON.stringify({ client: selectedClient }));
       } else {
-        document.getElementById("message").textContent =
-          "Открой Mini App через кнопку внутри Telegram.";
+        message.textContent =
+          "Открой Mini App через кнопку в Telegram-боте LeqVPN.";
       }
     }
   </script>
