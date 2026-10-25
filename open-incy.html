@@ -20,7 +20,7 @@ const params = new URLSearchParams(location.search);
 const subscription = params.get("url");
 if (subscription && subscription.startsWith("https://")) {
   document.getElementById("open").href =
-    "incy://import/" + btoa(unescape(encodeURIComponent(subscription)));
+    "incy://import/" + subscription;
   document.getElementById("open").hidden = false;
   document.getElementById("note").textContent =
     "Нажми кнопку, чтобы передать подписку в INCY.";
