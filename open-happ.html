@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LeqVPN — импорт в Happ</title>
+<style>
+body{font-family:Arial,sans-serif;background:#071426;color:white;text-align:center;padding:48px 20px}
+a{display:inline-block;background:#168cff;color:white;padding:16px 24px;border-radius:12px;text-decoration:none;font-weight:bold}
+p{color:#b8c9dc;line-height:1.6}
+</style>
+</head>
+<body>
+<h2>LeqVPN</h2>
+<p>Нажми кнопку ниже, чтобы передать подписку в Happ.</p>
+<a id="open" href="#">🚀 Открыть в Happ</a>
+<p>Если Happ не установлен или не открывается, проверь приложение на iPhone.</p>
+<script>
+const params = new URLSearchParams(location.search);
+const subscription = params.get("url");
+if (subscription && subscription.startsWith("https://")) {
+  document.getElementById("open").href =
+    "happ://add/" + encodeURIComponent(subscription);
+} else {
+  document.querySelector("p").textContent =
+    "Ссылка подписки не передана. Вернись в Telegram.";
+  document.getElementById("open").hidden = true;
+}
+</script>
+</body>
+</html>
